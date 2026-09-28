@@ -1,12 +1,9 @@
 import os
 
 from openai import OpenAI
-from openai.types.chat import ChatCompletionMessageParam
-
-from prompts import system_prompt
 
 
-def call_bot(args, available_functions):
+def call_bot(args, available_functions, messages):
     api_key = os.environ.get("OPENROUTER_API_KEY")
     if api_key is None:
         raise RuntimeError("API key not found")
@@ -16,10 +13,6 @@ def call_bot(args, available_functions):
         api_key=api_key,
     )
 
-    messages: list[ChatCompletionMessageParam] = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": args.user_prompt},
-    ]
     response = client.chat.completions.create(
         model="openrouter/free",
         messages=messages,
